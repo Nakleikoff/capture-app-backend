@@ -15,15 +15,14 @@ Explain the problem(s) this PR addresses and the impact if not fixed.
 
 Describe how your changes solve the problem. Call out important implementation details, trade-offs, and any "gotchas" other developers should know about.
 
-
 ## Database / Migrations
 
 If this change includes DB migrations, seeders, or schema updates, list the commands and any manual steps reviewers or deployers must run.
-
 
 ## Links
 
 Include related tickets, design documents, or deployment notes (JIRA, PRs, Figma).
 
 ---
+
 _Tip: keep PR bodies concise and focused. Add screenshots or logs only when they help the reviewer._
