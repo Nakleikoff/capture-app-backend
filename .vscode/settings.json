@@ -1,0 +1,6 @@
+{
+  "eslint.format.enable": false,
+  "prettier.requireConfig": true,
+  "javascript.format.enable": false,
+  "prettier.configPath": "./.vscode/prettierrc.json"
+}

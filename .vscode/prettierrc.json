@@ -1,0 +1,21 @@
+{
+  "arrowParens": "avoid",
+  "printWidth": 100,
+  "singleQuote": true,
+  "trailingComma": "none",
+  "overrides": [
+    {
+      "files": "*.md",
+      "options": {
+        "tabWidth": 4
+      }
+    },
+    {
+      "files": ["*.yaml", "*.yml"],
+      "options": {
+        "bracketSpacing": false
+      }
+    }
+  ],
+  "singleAttributePerLine": true
+}
