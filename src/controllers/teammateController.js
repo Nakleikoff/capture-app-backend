@@ -6,17 +6,17 @@ const createTeammate = async (req, res) => {
     const { name } = req.body;
 
     const user = await Teammate.create({
-      name
+      name,
     });
 
     res.status(201).json({
       success: true,
-      data: user
+      data: user,
     });
   } catch (error) {
     res.status(400).json({
       success: false,
-      error: error.message
+      error: error.message,
     });
   }
 };
@@ -29,12 +29,12 @@ const getAllTeammates = async (req, res) => {
     res.status(200).json({
       success: true,
       count: teammates.length,
-      data: teammates
+      data: teammates,
     });
   } catch (error) {
     res.status(500).json({
       success: false,
-      error: error.message
+      error: error.message,
     });
   }
 };
