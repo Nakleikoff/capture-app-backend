@@ -19,6 +19,8 @@ app.use(
   ])
 );
 
+app.use(express.json());
+
 app.use('/api/teammates', teammateRoutes);
 
 export { app };
