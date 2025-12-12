@@ -9,6 +9,14 @@ services:
     depends_on:
       - mysql
 
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+    command: ['npm', 'run', 'dev']
+    environment:
+      NODE_ENV: development
+
   mysql:
     image: mysql:8.0
     container_name: capture_app_mysql
