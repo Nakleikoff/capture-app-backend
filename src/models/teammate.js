@@ -15,7 +15,7 @@ const Teammate = sequelize.define(
     }
   },
   {
-    tableName: 'team_mates',
+    tableName: 'teammates',
     timestamps: true
   }
 );
