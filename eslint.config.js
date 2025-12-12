@@ -7,7 +7,7 @@ export default defineConfig([
   {
     files: ['src/**/*.{js,mjs,cjs}'],
     extends: [
-      js.configs.recommended, // ← важно: НЕ 'js/recommended'
+      js.configs.recommended,
       prettier,
     ],
     languageOptions: { globals: globals.node },
