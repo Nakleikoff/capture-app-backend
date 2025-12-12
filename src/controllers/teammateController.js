@@ -5,13 +5,13 @@ const createTeammate = async (req, res) => {
   try {
     const { name } = req.body;
 
-    const user = await Teammate.create({
+    const teammate = await Teammate.create({
       name
     });
 
     res.status(201).json({
       success: true,
-      data: user
+      data: teammate
     });
   } catch (error) {
     res.status(400).json({
