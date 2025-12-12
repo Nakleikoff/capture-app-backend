@@ -11,18 +11,12 @@ export const sequelize = new Sequelize(
     host: process.env.DB_HOST,
     port: process.env.DB_PORT || 3306,
     dialect: 'mysql',
-    logging: process.env.NODE_ENV === 'development' ? console.log : false,
-  },
+    logging: process.env.NODE_ENV === 'development' ? console.log : false
+  }
 );
-
 
 export const connectDB = async () => {
   try {
-    console.log("Authenticating sequelize.....")
-    console.log("DB details: ", process.env.DB_NAME)
-    console.log("DB details: ", process.env.DB_USER)
-    console.log("DB details: ", process.env.DB_PASSWORD)
-    console.log("DB details: ", process.env.DB_HOST)
     await sequelize.authenticate();
     console.log('Database connection has been established successfully.');
     await sequelize.sync({ alter: true });
