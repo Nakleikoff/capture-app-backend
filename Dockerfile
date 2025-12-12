@@ -1,17 +1,13 @@
-FROM node:18-alpine AS frontend
+FROM node:22-alpine3.21
 
-# Set working directory
 WORKDIR /app
 
-COPY ./package*.json ./
+COPY ./package.json ./
 
-# Copy project files
-COPY . .
-
-# Install dependencies 
 RUN npm install 
+
+COPY . .
 
 EXPOSE 8080
 
-# Start the application
-CMD ["node", "src/server.js"]
+CMD ["npm", "start"]
