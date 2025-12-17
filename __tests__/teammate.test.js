@@ -1,5 +1,5 @@
 import request from 'supertest';
-import app from '../src/app.js';
+import { app } from '../src/app.js';
 import Teammate from '../src/models/teammate.js';
 import { jest } from "@jest/globals";
 
