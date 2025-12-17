@@ -3,7 +3,7 @@ services:
     container_name: capture_app
     build: .
     ports:
-      - '8080:3000'
+      - '${PORT}:3000'
     depends_on:
       mysql:
         condition: service_healthy
@@ -15,7 +15,6 @@ services:
     command: ['npm', 'run', 'dev']
     environment:
       NODE_ENV: development
-      DB_HOST: mysql
     networks:
       - app-network
 
