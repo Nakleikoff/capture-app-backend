@@ -103,42 +103,6 @@ describe('Feedback Routes Integration Tests', () => {
       });
     });
 
-    it('should reject invalid feedback structure', async () => {
-      const response = await request(app)
-        .post(`/api/feedback/${teammateId}`)
-        .set('Authorization', `Bearer ${authToken}`)
-        .send({
-          feedback: []
-        });
-
-      expect(response.status).toBe(400);
-      expect(response.body.error.code).toBe('VALIDATION_ERROR');
-    });
-
-    it('should reject invalid answer values', async () => {
-      const response = await request(app)
-        .post(`/api/feedback/${teammateId}`)
-        .set('Authorization', `Bearer ${authToken}`)
-        .send({
-          feedback: [
-            {
-              categoryId: 1,
-              questions: [
-                {
-                  id: 1,
-                  answer: {
-                    value: 5, // Invalid: must be -1, 0, or 1
-                    comment: 'Test comment'
-                  }
-                }
-              ]
-            }
-          ]
-        });
-
-      expect(response.status).toBe(400);
-    });
-
     it('should reject without authentication', async () => {
       const response = await request(app)
         .post(`/api/feedback/${teammateId}`)

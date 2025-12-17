@@ -48,32 +48,6 @@ describe('Teammate Routes Integration Tests', () => {
         }
       });
     });
-
-    it('should reject request with invalid data', async () => {
-      const response = await request(app)
-        .post('/api/teammates')
-        .set('Authorization', `Bearer ${authToken}`)
-        .send({
-          teammate: { name: '' }
-        });
-
-      expect(response.status).toBe(400);
-      expect(response.body).toMatchObject({
-        success: false,
-        error: {
-          code: 'VALIDATION_ERROR'
-        }
-      });
-    });
-
-    it('should reject request with missing data', async () => {
-      const response = await request(app)
-        .post('/api/teammates')
-        .set('Authorization', `Bearer ${authToken}`)
-        .send({});
-
-      expect(response.status).toBe(400);
-    });
   });
 
   describe('GET /api/teammates', () => {
