@@ -15,8 +15,8 @@ app.use(helmet());
 app.use(
   cors([
     'http://localhost:3000',
-    'https://capture-app-frontend.vercel.app' //adjust once we deploy
-  ])
+    'https://capture-app-frontend.vercel.app', //adjust once we deploy
+  ]),
 );
 
 app.use('/api/teammates', teammateRoutes);
