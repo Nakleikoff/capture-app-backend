@@ -12,12 +12,39 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: capture_app_db
-
     healthcheck:
       test:
         ['CMD', 'mysqladmin', 'ping', '-h', 'localhost', '-u', 'root', '-p${MYSQL_ROOT_PASSWORD}']
       timeout: 20s
       retries: 10
+    networks:
+      - capture_network
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: capture_app_backend
+    restart: always
+    ports:
+      - '8080:8080'
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: capture_app_db
+      DB_USER: root
+      DB_PASSWORD: password
+      PORT: 8080
+      NODE_ENV: development
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - capture_network
 
 volumes:
   mysql_data:
+
+networks:
+  capture_network:
+    driver: bridge

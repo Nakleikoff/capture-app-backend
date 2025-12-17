@@ -1,13 +1,14 @@
-import express from 'express';
+import express, { Application } from 'express';
 import dotenv from 'dotenv';
 import helmet from 'helmet';
 import { cors } from './middleware/cors.js';
 import { connectDB } from './config/database.js';
 import teammateRoutes from './routes/teammateRoutes.js';
+import feedbackRoutes from './routes/feedbackRoutes.js';
 
 dotenv.config();
 
-const app = express();
+const app: Application = express();
 
 connectDB();
 
@@ -22,5 +23,6 @@ app.use(
 app.use(express.json());
 
 app.use('/api/teammates', teammateRoutes);
+app.use('/api/feedback', feedbackRoutes);
 
 export { app };
