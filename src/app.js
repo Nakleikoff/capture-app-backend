@@ -12,6 +12,7 @@ const app = express();
 connectDB();
 
 app.use(helmet());
+
 app.use(
   cors([
     'http://localhost:3000',
