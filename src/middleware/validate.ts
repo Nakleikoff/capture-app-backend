@@ -37,7 +37,15 @@ export const validateBody = (schema: ZodSchema) => {
 export const validateQuery = (schema: ZodSchema) => {
   return (req: Request, res: Response, next: NextFunction): void => {
     try {
-      req.query = schema.parse(req.query) as any;
+      // Convert query params to the expected format for Zod
+      const query = Object.fromEntries(
+        Object.entries(req.query).map(([key, value]) => [
+          key,
+          value === undefined ? undefined : String(value)
+        ])
+      );
+      
+      req.query = schema.parse(query) as any;
       next();
     } catch (error) {
       if (error instanceof ZodError) {

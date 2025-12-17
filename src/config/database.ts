@@ -21,8 +21,15 @@ export const connectDB = async (): Promise<void> => {
     console.log('Database connection has been established successfully.');
     await sequelize.sync({ alter: true });
     console.log('All models were synchronized successfully.');
+    
+    // Seed database with initial data
+    const { seedDatabase } = await import('./seed.js');
+    await seedDatabase();
   } catch (error) {
     console.error('Unable to connect to the database:', error);
-    process.exit(1);
+    if (process.env.NODE_ENV !== 'test') {
+      process.exit(1);
+    }
+    throw error;
   }
 };

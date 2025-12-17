@@ -32,7 +32,7 @@ Question.init(
     },
     categoryId: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true, // Changed to allow null for easier seeding
       references: {
         model: 'categories',
         key: 'id'
