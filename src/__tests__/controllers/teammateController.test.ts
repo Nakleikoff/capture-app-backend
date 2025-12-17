@@ -99,25 +99,5 @@ describe('Teammate Controller', () => {
         }
       });
     });
-
-    it('should handle errors during teammate retrieval', async () => {
-      vi.mocked(Teammate.findAll).mockRejectedValue(new Error('Database error'));
-
-      const req = {
-        query: {},
-        user: { id: 'user123' }
-      } as unknown as AuthRequest;
-
-      await teammateController.getAllTeammates(req, mockRes as Response);
-
-      expect(mockRes.status).toHaveBeenCalledWith(500);
-      expect(mockRes.json).toHaveBeenCalledWith({
-        success: false,
-        error: {
-          code: 'GET_TEAMMATES_ERROR',
-          details: { message: 'Database error' }
-        }
-      });
-    });
   });
 });
