@@ -3,7 +3,7 @@ services:
     container_name: capture_app
     build: .
     ports:
-      - '${PORT}:3000'
+      - '${PORT}:${PORT}'
     depends_on:
       mysql:
         condition: service_healthy
