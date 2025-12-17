@@ -109,7 +109,7 @@ describe('Authentication Middleware', () => {
       expect(token).toBeTruthy();
       expect(typeof token).toBe('string');
 
-      const JWT_SECRET = process.env.JWT_SECRET || 'secret-production-key';
+      const JWT_SECRET = process.env.JWT_SECRET || 'jwt-secret-production-key';
       const decoded = jwt.verify(token, JWT_SECRET) as { id: string; email: string };
       
       expect(decoded.id).toBe('user-e5f1a3b4');
@@ -121,7 +121,7 @@ describe('Authentication Middleware', () => {
       
       expect(token).toBeTruthy();
       
-      const JWT_SECRET = process.env.JWT_SECRET || 'secret-production-key';
+      const JWT_SECRET = process.env.JWT_SECRET || 'jwt-secret-production-key';
       const decoded = jwt.verify(token, JWT_SECRET) as { id: string };
       
       expect(decoded.id).toBe('user456');

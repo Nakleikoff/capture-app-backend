@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-production-key';
+const JWT_SECRET = process.env.JWT_SECRET || 'jwt-secret-production-key';
 
 export const generateTestToken = (userId: string, email?: string): string => {
   return jwt.sign({ id: userId, email }, JWT_SECRET, { expiresIn: '1h' });
