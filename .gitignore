@@ -3,3 +3,6 @@ node_modules
 .sequelizerc
 config/config.js
 dist
+
+coverage/
+.idea/

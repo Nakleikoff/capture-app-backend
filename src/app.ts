@@ -10,7 +10,11 @@ dotenv.config();
 
 const app: Application = express();
 
-connectDB();
+// Only connect to DB in non-test environment
+// In tests, the setup.ts file handles database connection
+if (process.env.NODE_ENV !== 'test') {
+  connectDB();
+}
 
 app.use(helmet());
 app.use(
