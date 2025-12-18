@@ -12,11 +12,16 @@ afterEach(async () => {
 describe('teammateController: Positive Tests', () => {
   
   test('POST /api/teammates should create a teammate', async () => {
-  const response = await request(app)
-    .post('/api/teammates')
-    .set('Accept', 'application/json')
-    .set('Content-Type', 'application/json')   // add explicitly
-    .send(JSON.stringify({ name: 'Atest User' }));
+    
+    const payload = { name: 'Atest User' };
+  console.log('Sending payload:', payload);
+    
+    const response = await request(app)
+      .post('/api/teammates')
+      .send(payload);
+
+ console.log('Response status:', response.statusCode);
+  console.log('Response body:', response.body);
 
     expect(response.statusCode).toBe(201);
     expect(response.body.success).toBe(true);
