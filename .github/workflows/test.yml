@@ -22,8 +22,8 @@ jobs:
 
       - name: Start DB via Docker Compose
         run: |
-          PORT=3306
-          MYSQL_ROOT_PASSWORD=password
+          PORT=3306 \
+          MYSQL_ROOT_PASSWORD=password \
           docker compose up -d mysql
 
       - name: Wait for MySQL
