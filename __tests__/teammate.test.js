@@ -3,17 +3,13 @@ import { app } from '../src/app.js';
 import Teammate from '../src/models/teammate.js';
 import { jest } from "@jest/globals";
 
-// Ensure DB is clean before each test
-beforeEach(async () => {
-  await Teammate.destroy({ where: {}, truncate: true });
-});
 
 // Ensure DB is clean after each test
 afterEach(async () => {
   await Teammate.destroy({where: {}, truncate: true });
 });
 
-describe('teammateController: Postive Tests', () => {
+describe('teammateController: Positive Tests', () => {
   
   test('POST /api/teammates should create a teammate', async () => {
     const response = await request(app)
