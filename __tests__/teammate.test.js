@@ -8,6 +8,8 @@ beforeAll(async () => {
   await connectDB();
 });
 
+// random comment
+
 // Ensure DB is clean after each test
 afterEach(async () => {
   await Teammate.destroy({where: {}, truncate: true });
