@@ -20,6 +20,6 @@ jobs:
       - name: Run tests
         run: npm test
       - name: Start DB via Docker Compose
-        run: docker compose up -d mysql
+        run: docker compose --profile db up -d mysql
       - name: Run api tests
         run: npm run test:api
