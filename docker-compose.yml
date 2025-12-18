@@ -1,6 +1,5 @@
 services:
   app:
-    profiles: ["app"]
     container_name: capture_app
     build: .
     ports:
@@ -9,7 +8,6 @@ services:
       - mysql
 
   mysql:
-    profiles: ["db"]
     image: mysql:8.0
     container_name: capture_app_mysql
     restart: always
