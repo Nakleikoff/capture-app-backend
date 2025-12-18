@@ -1,8 +1,12 @@
+import { sequelize } from '../config/database.js';
 import request from 'supertest';
 import { app } from '../src/app.js';
 import Teammate from '../src/models/teammate.js';
 import { jest } from "@jest/globals";
 
+beforeAll(async () => {
+  await sequelize.sync({ force: true }); // drops and recreates tables for clean tests
+});
 
 // Ensure DB is clean after each test
 afterEach(async () => {
