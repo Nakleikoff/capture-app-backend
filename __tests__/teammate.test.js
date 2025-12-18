@@ -1,16 +1,20 @@
-import { sequelize } from '../config/database.js';
 import request from 'supertest';
 import { app } from '../src/app.js';
 import Teammate from '../src/models/teammate.js';
 import { jest } from "@jest/globals";
+import { connectDB, sequelize } from '../src/config/database.js';
 
 beforeAll(async () => {
-  await sequelize.sync({ force: true }); // drops and recreates tables for clean tests
+  await connectDB();
 });
 
 // Ensure DB is clean after each test
 afterEach(async () => {
   await Teammate.destroy({where: {}, truncate: true });
+});
+
+afterAll(async () => {
+  await sequelize.close();
 });
 
 describe('teammateController: Positive Tests', () => {
