@@ -20,16 +20,10 @@ afterAll(async () => {
 describe('teammateController: Positive Tests', () => {
   
   test('POST /api/teammates should create a teammate', async () => {
-    
-    const payload = { name: 'Atest User' };
-  console.log('Sending payload:', payload);
-    
+      
     const response = await request(app)
       .post('/api/teammates')
-      .send(payload);
-
- console.log('Response status:', response.statusCode);
-  console.log('Response body:', response.body);
+      .send({ name: 'Atest User' });
 
     expect(response.statusCode).toBe(201);
     expect(response.body.success).toBe(true);
@@ -79,7 +73,7 @@ describe('teammateController: Negative Tests', () => {
 
   test('POST /api/teammates DB Down', async () => {
 
-jest.spyOn(Teammate, "create").mockRejectedValue(new Error("DB down"));
+    jest.spyOn(Teammate, "create").mockRejectedValue(new Error("DB down"));
     
     const response = await request(app)
       .post('/api/teammates')
