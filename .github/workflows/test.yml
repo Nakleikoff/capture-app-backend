@@ -41,4 +41,4 @@ jobs:
           DB_PORT: 3306
           DB_NAME: capture_app_db
           DB_USER: root
-          DB_PASS: password
+          DB_PASSWORD: password
