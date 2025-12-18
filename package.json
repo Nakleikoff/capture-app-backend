@@ -7,6 +7,7 @@
   "scripts": {
     "start:local-dev-services": "docker compose -f docker-compose.dev.yml up -d --wait",
     "stop:local-dev-services": "docker compose -f docker-compose.dev.yml down",
+    "test:local-dev-services": "docker exec -w /app capture_app npm run test",
     "build": "tsc",
     "start": "node dist/server.js",
     "dev": "tsx watch src/server.ts",
