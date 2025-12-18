@@ -14,6 +14,7 @@ describe('teammateController: Positive Tests', () => {
   test('POST /api/teammates should create a teammate', async () => {
     const response = await request(app)
       .post('/api/teammates')
+      .set('Accept', 'application/json')
       .send({ name: 'Atest User' });
 
     expect(response.statusCode).toBe(201);
