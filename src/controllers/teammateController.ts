@@ -32,7 +32,7 @@ const createTeammate = async (req: AuthRequest, res: Response): Promise<void> =>
 };
 
 // Get all teammates
-const getAllTeammates = async (req: AuthRequest, res: Response): Promise<void> => {
+const getAllTeammates = async (_: AuthRequest, res: Response): Promise<void> => {
   try {
     const teammates = await Teammate.findAll({
       order: [['name', 'ASC']]

@@ -1,30 +1,37 @@
-FROM node:18-alpine AS builder
+FROM node:22-alpine3.21 AS base
 
 WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm install 
+RUN npm ci
 
-# Copy project files
+# Run Dev
+FROM base AS development
+
+COPY . .
+
+CMD ["npm", "run", "dev"]
+
+# Build
+FROM base AS build
+
 COPY . .
 
 # Build TypeScript
 RUN npm run build
 
-FROM node:18-alpine
+FROM node:22-alpine3.21 AS production
 
 WORKDIR /app
 
 COPY package*.json ./
 
 # Install production dependencies only
-RUN npm install --production
+RUN npm ci --production
 
 # Copy built files from builder
-COPY --from=builder /app/dist ./dist
-
-EXPOSE 8080
+COPY --from=build /app/dist ./dist
 
 # Start the application
 CMD ["node", "dist/server.js"]
