@@ -39,26 +39,3 @@ jobs:
           DB_USER: root
           DB_PASSWORD: password
           NODE_ENV: test
-
-     # - name: Start DB via Docker Compose
-     #   run: |
-     #     PORT=3306 \
-     #     MYSQL_ROOT_PASSWORD=password \
-     #     docker compose up -d mysql
-
-     # - name: Wait for MySQL
-     #   run: |
-     #     for i in {1..30}; do
-     #       docker exec capture_app_mysql mysql -u root -ppassword -e "SELECT 1" >/dev/null 2>&1 && break
-     #       echo "Waiting for MySQL..."
-     #       sleep 2
-     #     done
-
-     # - name: Run api tests
-     #   run: npm run test:api
-     #   env:
-     #     DB_HOST: localhost
-     #     DB_PORT: 3306
-     #     DB_NAME: capture_app_db
-     #     DB_USER: root
-     #     DB_PASSWORD: password
