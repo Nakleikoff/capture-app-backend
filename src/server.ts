@@ -4,16 +4,23 @@ dotenv.config();
 import { sequelize } from './config/database.js';
 import { app } from './app.js';
 
+import { generateToken } from './middleware/auth.js';
+
 const PORT = parseInt(process.env.PORT || '8080', 10);
 
-async function start() {
+async function start(): Promise<void> {
   try {
     const server = app.listen(PORT, () => {
       console.log(`Server listening on port ${PORT}`);
     });
 
+    console.log(
+      'JWT token generated for testing: ',
+      generateToken('user-e5f1a3b4', 'test.user@test.com')
+    );
+
     // Graceful shutdown
-    const shutdown = async () => {
+    const shutdown = async (): Promise<void> => {
       console.log('Shutting down...');
       await sequelize.close();
       server.close(() => process.exit(0));
