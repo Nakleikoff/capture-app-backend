@@ -2,5 +2,7 @@ node_modules
 .env
 .sequelizerc
 config/config.js
+dist
+
 coverage/
 .idea/

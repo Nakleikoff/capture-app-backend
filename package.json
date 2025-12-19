@@ -2,17 +2,20 @@
   "name": "capture-app-backend",
   "version": "1.0.0",
   "description": "Capture App API",
-  "main": "src/server.js",
+  "main": "dist/server.js",
   "type": "module",
   "scripts": {
     "start:local-dev-services": "docker compose -f docker-compose.dev.yml up -d --wait",
     "stop:local-dev-services": "docker compose -f docker-compose.dev.yml down",
-    "start": "node src/server.js",
-    "dev": "nodemon src/server.js",
-    "test": "npm run eslint:test",
-    "test:api": "node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles --runInBand --coverage",
-    "eslint:test": "eslint .",
-    "eslint:fix": "eslint . --fix"
+    "test:local-dev-services": "docker exec -w /app capture_app npm run test",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "dev": "tsx watch src/server.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage"
   },
   "repository": {
     "type": "git",
@@ -29,18 +32,30 @@
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.3",
     "mysql2": "^3.15.3",
     "nodemon": "^3.1.11",
-    "sequelize": "^6.37.7"
+    "sequelize": "^6.37.7",
+    "zod": "^4.2.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^25.0.2",
+    "@types/supertest": "^6.0.3",
+    "@vitest/coverage-v8": "^4.0.16",
+    "@vitest/ui": "^4.0.16",
     "eslint": "^9.39.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
     "globals": "^16.5.0",
-    "jest": "^30.2.0",
     "prettier": "3.7.4",
-    "supertest": "^7.1.4"
+    "supertest": "^7.1.4",
+    "ts-node": "^10.9.2",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.16"
   }
 }

@@ -1,12 +1,4 @@
 services:
-  app:
-    container_name: capture_app
-    build: .
-    ports:
-      - '${PORT}:${PORT}'
-    depends_on:
-      - mysql
-
   mysql:
     image: mysql:8.0
     container_name: capture_app_mysql
@@ -14,14 +6,40 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: capture_app_db
-
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
     healthcheck:
       test:
-        ['CMD', 'mysqladmin', 'ping', '-h', 'localhost', '-u', 'root', '-p${MYSQL_ROOT_PASSWORD}']
+        ['CMD', 'mysqladmin', 'ping', '-h', 'localhost', '-u', 'root', '-p${DB_PASSWORD}']
       timeout: 20s
       retries: 10
+    networks:
+      - capture_network
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: capture_app_backend
+    restart: always
+    ports:
+      - '${PORT}:${PORT}'
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      PORT: ${PORT}
+      NODE_ENV: production
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - capture_network
 
 volumes:
   mysql_data:
+
+networks:
+  capture_network:
