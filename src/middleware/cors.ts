@@ -1,5 +1,7 @@
-const cors = (allowOrigins = []) => {
-  return (req, res, next) => {
+import { Request, Response, NextFunction } from 'express';
+
+export const cors = (allowOrigins: string[] = []) => {
+  return (req: Request, res: Response, next: NextFunction): void => {
     const origin = req.headers.origin;
 
     // Check if origin is in the allowlist
@@ -39,5 +41,3 @@ const cors = (allowOrigins = []) => {
     next();
   };
 };
-
-export { cors };
