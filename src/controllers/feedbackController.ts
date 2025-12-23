@@ -11,7 +11,7 @@ import { sequelize } from '../config/database.js';
 const getFeedback = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const { teammateId } = req.params;
-    const { reviewId } = req.query;
+    const userId = req.user?.id;
 
     // Verify teammate exists
     const teammate = await Teammate.findByPk(teammateId);
@@ -37,12 +37,29 @@ const getFeedback = async (req: AuthRequest, res: Response): Promise<void> => {
       ]
     });
 
-    // Get existing answers if reviewId is provided
+    // Get user's most recent review for this teammate
     let answers: Answer[] = [];
-    if (reviewId) {
-      answers = await Answer.findAll({
-        where: { reviewId: reviewId as string }
+    let reviewId: number | null = null;
+    
+    if (userId) {
+      const userReview = await Review.findOne({
+        where: {
+          teammateId: parseInt(teammateId),
+          capturingUserId: userId
+        },
+        order: [['createdAt', 'DESC']], // Get most recent
+        include: [
+          {
+            model: Answer,
+            as: 'answers'
+          }
+        ]
       });
+
+      if (userReview) {
+        reviewId = userReview.id;
+        answers = (userReview as any).answers || [];
+      }
     }
 
     // Build the response structure
@@ -73,6 +90,7 @@ const getFeedback = async (req: AuthRequest, res: Response): Promise<void> => {
           id: teammate.id,
           name: teammate.name
         },
+        ...(reviewId && { reviewId }), // Include reviewId if user has existing feedback
         feedback
       }
     });
