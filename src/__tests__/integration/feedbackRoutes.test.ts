@@ -50,6 +50,48 @@ describe('Feedback Routes Integration Tests', () => {
       });
     });
 
+    it('should return user\'s existing answers automatically', async () => {
+      // First submit feedback
+      const submitResponse = await request(app)
+        .post(`/api/feedback/${teammateId}`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({
+          feedback: [
+            {
+              categoryId: 1,
+              questions: [
+                {
+                  id: 1,
+                  answer: {
+                    value: 1,
+                    comment: 'Great communicator'
+                  }
+                }
+              ]
+            }
+          ]
+        });
+
+      expect(submitResponse.status).toBe(201);
+
+      // Now GET should return those answers without needing to pass reviewId
+      const getResponse = await request(app)
+        .get(`/api/feedback/${teammateId}`)
+        .set('Authorization', `Bearer ${authToken}`);
+
+      expect(getResponse.status).toBe(200);
+      expect(getResponse.body.data.reviewId).toBeDefined(); // Should include reviewId
+      
+      // Find the question we answered
+      const category = getResponse.body.data.feedback.find((f: any) => f.category.id === 1);
+      const question = category.questions.find((q: any) => q.id === 1);
+      
+      expect(question.answer).toMatchObject({
+        value: 1,
+        comment: 'Great communicator'
+      });
+    });
+
     it('should return 404 for non-existent teammate', async () => {
       const response = await request(app)
         .get('/api/feedback/99999')
