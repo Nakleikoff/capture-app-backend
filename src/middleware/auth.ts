@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import { env } from '../config/env.js';
 
 // Extend Express Request type to include user
 export interface AuthRequest extends Request {
@@ -9,7 +10,7 @@ export interface AuthRequest extends Request {
   };
 }
 
-const JWT_SECRET = process.env.JWT_SECRET || 'jwt-secret-production-key';
+const JWT_SECRET = env.JWT_SECRET;
 
 export const authenticate = (req: Request, res: Response, next: NextFunction): void => {
   try {

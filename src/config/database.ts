@@ -1,17 +1,15 @@
-import dotenv from 'dotenv';
 import { Sequelize } from 'sequelize';
-
-dotenv.config();
+import { env } from './env.js';
 
 export const sequelize = new Sequelize(
-  process.env.DB_NAME as string,
-  process.env.DB_USER as string,
-  process.env.DB_PASSWORD as string,
+  env.DB_NAME,
+  env.DB_USER,
+  env.DB_PASSWORD,
   {
-    host: process.env.DB_HOST,
-    port: parseInt(process.env.DB_PORT || '3306', 10),
+    host: env.DB_HOST,
+    port: env.DB_PORT,
     dialect: 'mysql',
-    logging: process.env.NODE_ENV === 'development' ? console.log : false,
+    logging: env.NODE_ENV === 'development' ? console.log : false,
   },
 );
 
@@ -19,15 +17,22 @@ export const connectDB = async (): Promise<void> => {
   try {
     await sequelize.authenticate();
     console.log('Database connection has been established successfully.');
-    await sequelize.sync({ alter: true });
-    console.log('All models were synchronized successfully.');
     
-    // Seed database with initial data
-    const { seedDatabase } = await import('./seed.js');
-    await seedDatabase();
+    // In test/development, allow sync for convenience
+    // In production, rely on migrations
+    if (env.NODE_ENV === 'test') {
+      await sequelize.sync({ alter: true });
+      console.log('Test database synchronized.');
+      
+      // Seed database with initial data for tests
+      const { seedDatabase } = await import('./seed.js');
+      await seedDatabase();
+    } else {
+      console.log('Production mode: Run migrations separately using "npm run migrate"');
+    }
   } catch (error) {
     console.error('Unable to connect to the database:', error);
-    if (process.env.NODE_ENV !== 'test') {
+    if (env.NODE_ENV !== 'test') {
       process.exit(1);
     }
     throw error;
