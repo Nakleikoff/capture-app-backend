@@ -39,3 +39,4 @@ jobs:
           DB_USER: root
           DB_PASSWORD: password
           NODE_ENV: test
+          JWT_SECRET: rSoBoRvesh79z88Ya4gL23n/4SkAgM7WczI4X5aMr9PtkDZV97RgCNYnPOJxHkpRil6RR3ppMzxqlgtEtKV0Rg==
