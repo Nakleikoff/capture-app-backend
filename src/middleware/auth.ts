@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import { env } from '../config/env.js';
 
 // Extend Express Request type to include user
 export interface AuthRequest extends Request {
@@ -9,9 +10,13 @@ export interface AuthRequest extends Request {
   };
 }
 
-const JWT_SECRET = process.env.JWT_SECRET || 'jwt-secret-production-key';
+const JWT_SECRET = env.JWT_SECRET;
 
-export const authenticate = (req: Request, res: Response, next: NextFunction): void => {
+export const authenticate = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): void => {
   try {
     const authHeader = req.headers.authorization;
 
@@ -20,8 +25,8 @@ export const authenticate = (req: Request, res: Response, next: NextFunction): v
         success: false,
         error: {
           code: 'UNAUTHORIZED',
-          details: { message: 'No authorization token provided' }
-        }
+          details: { message: 'No authorization token provided' },
+        },
       });
       return;
     }
@@ -29,16 +34,19 @@ export const authenticate = (req: Request, res: Response, next: NextFunction): v
     const token = authHeader.substring(7); // Remove 'Bearer ' prefix
 
     try {
-      const decoded = jwt.verify(token, JWT_SECRET) as { id: string; email?: string };
+      const decoded = jwt.verify(token, JWT_SECRET) as {
+        id: string;
+        email?: string;
+      };
       (req as AuthRequest).user = decoded;
       next();
-    } catch (jwtError) {
+    } catch {
       res.status(401).json({
         success: false,
         error: {
           code: 'INVALID_TOKEN',
-          details: { message: 'Invalid or expired token' }
-        }
+          details: { message: 'Invalid or expired token' },
+        },
       });
     }
   } catch (error) {
@@ -46,20 +54,27 @@ export const authenticate = (req: Request, res: Response, next: NextFunction): v
       success: false,
       error: {
         code: 'AUTH_ERROR',
-        details: { message: (error as Error).message }
-      }
+        details: { message: (error as Error).message },
+      },
     });
   }
 };
 
 // Optional: middleware for endpoints that work with or without auth
-export const optionalAuth = (req: Request, _res: Response, next: NextFunction): void => {
+export const optionalAuth = (
+  req: Request,
+  _res: Response,
+  next: NextFunction,
+): void => {
   const authHeader = req.headers.authorization;
 
   if (authHeader && authHeader.startsWith('Bearer ')) {
     const token = authHeader.substring(7);
     try {
-      const decoded = jwt.verify(token, JWT_SECRET) as { id: string; email?: string };
+      const decoded = jwt.verify(token, JWT_SECRET) as {
+        id: string;
+        email?: string;
+      };
       (req as AuthRequest).user = decoded;
     } catch {
       // Token invalid, but it's optional so continue without user

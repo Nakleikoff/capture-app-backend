@@ -8,21 +8,21 @@ export const generateTestToken = (userId: string, email?: string): string => {
 
 export const mockUser = {
   id: 'user-a7f3c2d1',
-  email: 'lesego.rabanye@entelect.co.za'
+  email: 'lesego.rabanye@entelect.co.za',
 };
 
 export const mockTeammate = {
   id: 1,
   name: 'Lesego Rabanye',
   createdAt: new Date(),
-  updatedAt: new Date()
+  updatedAt: new Date(),
 };
 
 export const mockCategory = {
   id: 1,
   name: 'Communication',
   createdAt: new Date(),
-  updatedAt: new Date()
+  updatedAt: new Date(),
 };
 
 export const mockQuestion = {
@@ -30,7 +30,7 @@ export const mockQuestion = {
   questionText: 'Does the teammate communicate clearly?',
   categoryId: 1,
   createdAt: new Date(),
-  updatedAt: new Date()
+  updatedAt: new Date(),
 };
 
 export const mockReview = {
@@ -39,7 +39,7 @@ export const mockReview = {
   capturingUserId: 'user-a7f3c2d1',
   period: '2024-12',
   createdAt: new Date(),
-  updatedAt: new Date()
+  updatedAt: new Date(),
 };
 
 export const mockAnswer = {
@@ -49,5 +49,5 @@ export const mockAnswer = {
   answer: 1,
   commentText: 'Great communicator!',
   createdAt: new Date(),
-  updatedAt: new Date()
+  updatedAt: new Date(),
 };

@@ -8,9 +8,12 @@ interface TeammateAttributes {
   updatedAt?: Date;
 }
 
-interface TeammateCreationAttributes extends Optional<TeammateAttributes, 'id'> {}
+type TeammateCreationAttributes = Optional<TeammateAttributes, 'id'>;
 
-class Teammate extends Model<TeammateAttributes, TeammateCreationAttributes> implements TeammateAttributes {
+class Teammate
+  extends Model<TeammateAttributes, TeammateCreationAttributes>
+  implements TeammateAttributes
+{
   declare id: number;
   declare name: string;
   declare readonly createdAt: Date;
@@ -22,18 +25,18 @@ Teammate.init(
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      autoIncrement: true
+      autoIncrement: true,
     },
     name: {
       type: DataTypes.STRING,
-      allowNull: false
-    }
+      allowNull: false,
+    },
   },
   {
     sequelize,
     tableName: 'teammates',
-    timestamps: true
-  }
+    timestamps: true,
+  },
 );
 
 export default Teammate;

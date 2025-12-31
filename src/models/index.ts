@@ -7,39 +7,39 @@ import Category from './category.js';
 // Define associations
 Answer.belongsTo(Review, {
   foreignKey: 'reviewId',
-  as: 'review'
+  as: 'review',
 });
 Answer.belongsTo(Question, {
   foreignKey: 'questionId',
-  as: 'question'
+  as: 'question',
 });
 
 Review.belongsTo(Teammate, {
   foreignKey: 'teammateId',
-  as: 'teammate'
+  as: 'teammate',
 });
 Review.hasMany(Answer, {
   foreignKey: 'reviewId',
-  as: 'answers'
+  as: 'answers',
 });
 
 Question.hasMany(Answer, {
   foreignKey: 'questionId',
-  as: 'answers'
+  as: 'answers',
 });
 Question.belongsTo(Category, {
   foreignKey: 'categoryId',
-  as: 'category'
+  as: 'category',
 });
 
 Category.hasMany(Question, {
   foreignKey: 'categoryId',
-  as: 'questions'
+  as: 'questions',
 });
 
 Teammate.hasMany(Review, {
   foreignKey: 'teammateId',
-  as: 'reviews'
+  as: 'reviews',
 });
 
 export { Answer, Review, Teammate, Question, Category };

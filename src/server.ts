@@ -2,34 +2,47 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import { sequelize } from './config/database.js';
-import { app } from './app.js';
+import { app, logger } from './app.js';
+import { env } from './config/env.js';
 
-import { generateToken } from './middleware/auth.js';
-
-const PORT = parseInt(process.env.PORT || '8080', 10);
+const PORT = env.PORT;
 
 async function start(): Promise<void> {
   try {
     const server = app.listen(PORT, () => {
-      console.log(`Server listening on port ${PORT}`);
+      logger.info(`Server listening on port ${PORT}`);
+      logger.info(`Environment: ${env.NODE_ENV}`);
+      logger.info(`API Documentation: http://localhost:${PORT}/api-docs`);
     });
-
-    console.log(
-      'JWT token generated for testing: ',
-      generateToken('user-e5f1a3b4', 'test.user@test.com')
-    );
 
     // Graceful shutdown
     const shutdown = async (): Promise<void> => {
-      console.log('Shutting down...');
+      logger.info('Shutting down gracefully...');
       await sequelize.close();
-      server.close(() => process.exit(0));
+      server.close(() => {
+        logger.info('Server closed');
+        process.exit(0);
+      });
     };
 
     process.on('SIGINT', shutdown);
     process.on('SIGTERM', shutdown);
+
+    // Handle uncaught errors
+    process.on('uncaughtException', (error) => {
+      logger.error('Uncaught exception', {
+        error: error.message,
+        stack: error.stack,
+      });
+      process.exit(1);
+    });
+
+    process.on('unhandledRejection', (reason) => {
+      logger.error('Unhandled rejection', { reason });
+      process.exit(1);
+    });
   } catch (err) {
-    console.error('Failed to connect to MySQL:', err);
+    logger.error('Failed to start server', { error: err });
     process.exit(1);
   }
 }

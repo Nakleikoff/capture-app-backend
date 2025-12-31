@@ -9,9 +9,12 @@ interface QuestionAttributes {
   updatedAt?: Date;
 }
 
-interface QuestionCreationAttributes extends Optional<QuestionAttributes, 'id'> {}
+type QuestionCreationAttributes = Optional<QuestionAttributes, 'id'>;
 
-class Question extends Model<QuestionAttributes, QuestionCreationAttributes> implements QuestionAttributes {
+class Question
+  extends Model<QuestionAttributes, QuestionCreationAttributes>
+  implements QuestionAttributes
+{
   declare id: number;
   declare questionText: string;
   declare categoryId: number;
@@ -24,26 +27,26 @@ Question.init(
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      autoIncrement: true
+      autoIncrement: true,
     },
     questionText: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
     categoryId: {
       type: DataTypes.INTEGER,
       allowNull: true, // Changed to allow null for easier seeding
       references: {
         model: 'categories',
-        key: 'id'
-      }
-    }
+        key: 'id',
+      },
+    },
   },
   {
     sequelize,
     tableName: 'questions',
-    timestamps: true
-  }
+    timestamps: true,
+  },
 );
 
 export default Question;

@@ -10,9 +10,12 @@ interface ReviewAttributes {
   updatedAt?: Date;
 }
 
-interface ReviewCreationAttributes extends Optional<ReviewAttributes, 'id'> {}
+type ReviewCreationAttributes = Optional<ReviewAttributes, 'id'>;
 
-class Review extends Model<ReviewAttributes, ReviewCreationAttributes> implements ReviewAttributes {
+class Review
+  extends Model<ReviewAttributes, ReviewCreationAttributes>
+  implements ReviewAttributes
+{
   declare id: number;
   declare capturingUserId: string;
   declare period: string;
@@ -26,30 +29,30 @@ Review.init(
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      autoIncrement: true
+      autoIncrement: true,
     },
     capturingUserId: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
     period: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
     teammateId: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
         model: 'teammates',
-        key: 'id'
-      }
-    }
+        key: 'id',
+      },
+    },
   },
   {
     sequelize,
     tableName: 'reviews',
-    timestamps: true
-  }
+    timestamps: true,
+  },
 );
 
 export default Review;

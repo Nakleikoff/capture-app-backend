@@ -9,7 +9,7 @@ beforeAll(async () => {
     await sequelize.authenticate();
     await sequelize.sync({ force: true }); // Force recreate tables in test env
     console.log('Test database connection established');
-    
+
     // Seed the database with categories and questions
     await seedDatabase();
   } catch (error) {
