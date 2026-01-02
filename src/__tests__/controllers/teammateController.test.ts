@@ -12,7 +12,7 @@ describe('Teammate Controller', () => {
   beforeEach(() => {
     mockRes = {
       status: vi.fn().mockReturnThis(),
-      json: vi.fn()
+      json: vi.fn(),
     };
     vi.clearAllMocks();
   });
@@ -23,14 +23,14 @@ describe('Teammate Controller', () => {
         id: 1,
         name: 'Lesego Rabanye',
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       };
 
       vi.mocked(Teammate.create).mockResolvedValue(mockTeammate as any);
 
       const req = {
         body: { teammate: { name: 'Lesego Rabanye' } },
-        user: { id: 'user-f3a9c7d2' }
+        user: { id: 'user-f3a9c7d2' },
       } as AuthRequest;
 
       await teammateController.createTeammate(req, mockRes as Response);
@@ -42,9 +42,9 @@ describe('Teammate Controller', () => {
         data: {
           teammate: {
             id: 1,
-            name: 'Lesego Rabanye'
-          }
-        }
+            name: 'Lesego Rabanye',
+          },
+        },
       });
     });
 
@@ -53,7 +53,7 @@ describe('Teammate Controller', () => {
 
       const req = {
         body: { teammate: { name: 'Johny Bravo' } },
-        user: { id: 'user123' }
+        user: { id: 'user123' },
       } as AuthRequest;
 
       await teammateController.createTeammate(req, mockRes as Response);
@@ -63,8 +63,8 @@ describe('Teammate Controller', () => {
         success: false,
         error: {
           code: 'CREATE_TEAMMATE_ERROR',
-          details: { message: 'Database error' }
-        }
+          details: { message: 'Database error' },
+        },
       });
     });
   });
@@ -73,20 +73,20 @@ describe('Teammate Controller', () => {
     it('should return all teammates', async () => {
       const mockTeammates = [
         { id: 1, name: 'Nomsa Dlamini' },
-        { id: 2, name: 'Kagiso Maluleke' }
+        { id: 2, name: 'Kagiso Maluleke' },
       ];
 
       vi.mocked(Teammate.findAll).mockResolvedValue(mockTeammates as any);
 
       const req = {
         query: {},
-        user: { id: 'user123' }
+        user: { id: 'user123' },
       } as unknown as AuthRequest;
 
       await teammateController.getAllTeammates(req, mockRes as Response);
 
       expect(Teammate.findAll).toHaveBeenCalledWith({
-        order: [['name', 'ASC']]
+        order: [['name', 'ASC']],
       });
       expect(mockRes.status).toHaveBeenCalledWith(200);
       expect(mockRes.json).toHaveBeenCalledWith({
@@ -94,9 +94,9 @@ describe('Teammate Controller', () => {
         data: {
           teammates: [
             { id: 1, name: 'Nomsa Dlamini' },
-            { id: 2, name: 'Kagiso Maluleke' }
-          ]
-        }
+            { id: 2, name: 'Kagiso Maluleke' },
+          ],
+        },
       });
     });
   });

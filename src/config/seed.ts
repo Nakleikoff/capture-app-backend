@@ -20,7 +20,7 @@ export const seedDatabase = async (): Promise<void> => {
         Category.create({ name: 'Communication' }, { transaction: t }),
         Category.create({ name: 'Technical Skills' }, { transaction: t }),
         Category.create({ name: 'Teamwork' }, { transaction: t }),
-        Category.create({ name: 'Problem Solving' }, { transaction: t })
+        Category.create({ name: 'Problem Solving' }, { transaction: t }),
       ]);
 
       console.log(`Created ${categories.length} categories`);
@@ -29,66 +29,106 @@ export const seedDatabase = async (): Promise<void> => {
 
       // Communication questions
       questions.push(
-        await Question.create({
-          questionText: 'Does the teammate communicate clearly and effectively?',
-          categoryId: categories[0].id
-        }, { transaction: t }),
-        await Question.create({
-          questionText: 'Does the teammate actively listen to others?',
-          categoryId: categories[0].id
-        }, { transaction: t }),
-        await Question.create({
-          questionText: 'Does the teammate provide timely updates?',
-          categoryId: categories[0].id
-        }, { transaction: t })
+        await Question.create(
+          {
+            questionText:
+              'Does the teammate communicate clearly and effectively?',
+            categoryId: categories[0].id,
+          },
+          { transaction: t },
+        ),
+        await Question.create(
+          {
+            questionText: 'Does the teammate actively listen to others?',
+            categoryId: categories[0].id,
+          },
+          { transaction: t },
+        ),
+        await Question.create(
+          {
+            questionText: 'Does the teammate provide timely updates?',
+            categoryId: categories[0].id,
+          },
+          { transaction: t },
+        ),
       );
 
       // Technical Skills questions
       questions.push(
-        await Question.create({
-          questionText: 'Does the teammate demonstrate strong technical abilities?',
-          categoryId: categories[1].id
-        }, { transaction: t }),
-        await Question.create({
-          questionText: 'Does the teammate write clean and maintainable code?',
-          categoryId: categories[1].id
-        }, { transaction: t }),
-        await Question.create({
-          questionText: 'Does the teammate stay current with technology trends?',
-          categoryId: categories[1].id
-        }, { transaction: t })
+        await Question.create(
+          {
+            questionText:
+              'Does the teammate demonstrate strong technical abilities?',
+            categoryId: categories[1].id,
+          },
+          { transaction: t },
+        ),
+        await Question.create(
+          {
+            questionText:
+              'Does the teammate write clean and maintainable code?',
+            categoryId: categories[1].id,
+          },
+          { transaction: t },
+        ),
+        await Question.create(
+          {
+            questionText:
+              'Does the teammate stay current with technology trends?',
+            categoryId: categories[1].id,
+          },
+          { transaction: t },
+        ),
       );
 
       // Teamwork questions
       questions.push(
-        await Question.create({
-          questionText: 'Does the teammate collaborate well with others?',
-          categoryId: categories[2].id
-        }, { transaction: t }),
-        await Question.create({
-          questionText: 'Does the teammate support team members?',
-          categoryId: categories[2].id
-        }, { transaction: t }),
-        await Question.create({
-          questionText: 'Does the teammate contribute to team morale?',
-          categoryId: categories[2].id
-        }, { transaction: t })
+        await Question.create(
+          {
+            questionText: 'Does the teammate collaborate well with others?',
+            categoryId: categories[2].id,
+          },
+          { transaction: t },
+        ),
+        await Question.create(
+          {
+            questionText: 'Does the teammate support team members?',
+            categoryId: categories[2].id,
+          },
+          { transaction: t },
+        ),
+        await Question.create(
+          {
+            questionText: 'Does the teammate contribute to team morale?',
+            categoryId: categories[2].id,
+          },
+          { transaction: t },
+        ),
       );
 
       // Problem Solving questions
       questions.push(
-        await Question.create({
-          questionText: 'Does the teammate approach problems analytically?',
-          categoryId: categories[3].id
-        }, { transaction: t }),
-        await Question.create({
-          questionText: 'Does the teammate find creative solutions?',
-          categoryId: categories[3].id
-        }, { transaction: t }),
-        await Question.create({
-          questionText: 'Does the teammate handle challenges effectively?',
-          categoryId: categories[3].id
-        }, { transaction: t })
+        await Question.create(
+          {
+            questionText: 'Does the teammate approach problems analytically?',
+            categoryId: categories[3].id,
+          },
+          { transaction: t },
+        ),
+        await Question.create(
+          {
+            questionText: 'Does the teammate find creative solutions?',
+            categoryId: categories[3].id,
+          },
+          { transaction: t },
+        ),
+        await Question.create(
+          {
+            questionText: 'Does the teammate handle challenges effectively?',
+            categoryId: categories[3].id,
+          },
+          { transaction: t },
+        ),
       );
 
       console.log(`Created ${questions.length} questions`);

@@ -15,7 +15,7 @@ describe('Feedback Routes Integration Tests', () => {
       .post('/api/teammates')
       .set('Authorization', `Bearer ${authToken}`)
       .send({
-        teammate: { name: 'Saxon Moore' }
+        teammate: { name: 'Saxon Moore' },
       });
 
     teammateId = response.body.data.teammate.id;
@@ -33,10 +33,10 @@ describe('Feedback Routes Integration Tests', () => {
         data: {
           teammate: {
             id: teammateId,
-            name: expect.any(String)
+            name: expect.any(String),
           },
-          feedback: expect.any(Array)
-        }
+          feedback: expect.any(Array),
+        },
       });
 
       // Verify feedback structure
@@ -44,13 +44,13 @@ describe('Feedback Routes Integration Tests', () => {
       expect(response.body.data.feedback[0]).toMatchObject({
         category: {
           id: expect.any(Number),
-          name: expect.any(String)
+          name: expect.any(String),
         },
-        questions: expect.any(Array)
+        questions: expect.any(Array),
       });
     });
 
-    it('should return user\'s existing answers automatically', async () => {
+    it("should return user's existing answers automatically", async () => {
       // First submit feedback
       const submitResponse = await request(app)
         .post(`/api/feedback/${teammateId}`)
@@ -64,12 +64,12 @@ describe('Feedback Routes Integration Tests', () => {
                   id: 1,
                   answer: {
                     value: 1,
-                    comment: 'Great communicator'
-                  }
-                }
-              ]
-            }
-          ]
+                    comment: 'Great communicator',
+                  },
+                },
+              ],
+            },
+          ],
         });
 
       expect(submitResponse.status).toBe(201);
@@ -81,14 +81,16 @@ describe('Feedback Routes Integration Tests', () => {
 
       expect(getResponse.status).toBe(200);
       expect(getResponse.body.data.reviewId).toBeDefined(); // Should include reviewId
-      
+
       // Find the question we answered
-      const category = getResponse.body.data.feedback.find((f: any) => f.category.id === 1);
+      const category = getResponse.body.data.feedback.find(
+        (f: any) => f.category.id === 1,
+      );
       const question = category.questions.find((q: any) => q.id === 1);
-      
+
       expect(question.answer).toMatchObject({
         value: 1,
-        comment: 'Great communicator'
+        comment: 'Great communicator',
       });
     });
 
@@ -101,14 +103,13 @@ describe('Feedback Routes Integration Tests', () => {
       expect(response.body).toMatchObject({
         success: false,
         error: {
-          code: 'TEAMMATE_NOT_FOUND'
-        }
+          code: 'TEAMMATE_NOT_FOUND',
+        },
       });
     });
 
     it('should reject without authentication', async () => {
-      const response = await request(app)
-        .get(`/api/feedback/${teammateId}`);
+      const response = await request(app).get(`/api/feedback/${teammateId}`);
 
       expect(response.status).toBe(401);
     });
@@ -128,20 +129,20 @@ describe('Feedback Routes Integration Tests', () => {
                   id: 1,
                   answer: {
                     value: 1,
-                    comment: 'Excellent communication skills!'
-                  }
-                }
-              ]
-            }
-          ]
+                    comment: 'Excellent communication skills!',
+                  },
+                },
+              ],
+            },
+          ],
         });
 
       expect(response.status).toBe(201);
       expect(response.body).toMatchObject({
         success: true,
         data: {
-          reviewId: expect.any(Number)
-        }
+          reviewId: expect.any(Number),
+        },
       });
     });
 
@@ -149,7 +150,7 @@ describe('Feedback Routes Integration Tests', () => {
       const response = await request(app)
         .post(`/api/feedback/${teammateId}`)
         .send({
-          feedback: [{ categoryId: 1, questions: [] }]
+          feedback: [{ categoryId: 1, questions: [] }],
         });
 
       expect(response.status).toBe(401);
@@ -169,11 +170,11 @@ describe('Feedback Routes Integration Tests', () => {
               questions: [
                 {
                   id: 1,
-                  answer: { value: 0, comment: 'Initial feedback' }
-                }
-              ]
-            }
-          ]
+                  answer: { value: 0, comment: 'Initial feedback' },
+                },
+              ],
+            },
+          ],
         });
 
       const reviewId = createResponse.body.data.reviewId;
@@ -189,24 +190,30 @@ describe('Feedback Routes Integration Tests', () => {
               questions: [
                 {
                   id: 1,
-                  answer: { value: 1, comment: 'Updated feedback - much better!' }
-                }
-              ]
-            }
-          ]
+                  answer: {
+                    value: 1,
+                    comment: 'Updated feedback - much better!',
+                  },
+                },
+              ],
+            },
+          ],
         });
 
       expect(updateResponse.status).toBe(200);
       expect(updateResponse.body).toMatchObject({
         success: true,
         data: {
-          reviewId: reviewId
-        }
+          reviewId: reviewId,
+        },
       });
     });
 
     it('should reject update from different user', async () => {
-      const differentUserToken = generateTestToken('different-user', 'other@example.com');
+      const differentUserToken = generateTestToken(
+        'different-user',
+        'other@example.com',
+      );
 
       const response = await request(app)
         .put(`/api/feedback/${teammateId}/1`)
@@ -218,11 +225,11 @@ describe('Feedback Routes Integration Tests', () => {
               questions: [
                 {
                   id: 1,
-                  answer: { value: 1, comment: 'Unauthorized update' }
-                }
-              ]
-            }
-          ]
+                  answer: { value: 1, comment: 'Unauthorized update' },
+                },
+              ],
+            },
+          ],
         });
 
       expect(response.status).toBe(404);
@@ -243,11 +250,11 @@ describe('Feedback Routes Integration Tests', () => {
               questions: [
                 {
                   id: 1,
-                  answer: { value: -1, comment: 'To be deleted' }
-                }
-              ]
-            }
-          ]
+                  answer: { value: -1, comment: 'To be deleted' },
+                },
+              ],
+            },
+          ],
         });
 
       const reviewId = createResponse.body.data.reviewId;
@@ -260,12 +267,15 @@ describe('Feedback Routes Integration Tests', () => {
       expect(deleteResponse.status).toBe(200);
       expect(deleteResponse.body).toMatchObject({
         success: true,
-        message: 'Feedback deleted successfully'
+        message: 'Feedback deleted successfully',
       });
     });
 
     it('should reject deletion from different user', async () => {
-      const differentUserToken = generateTestToken('another-user', 'another@example.com');
+      const differentUserToken = generateTestToken(
+        'another-user',
+        'another@example.com',
+      );
 
       const response = await request(app)
         .delete(`/api/feedback/${teammateId}/1`)

@@ -20,8 +20,8 @@ const getFeedback = async (req: AuthRequest, res: Response): Promise<void> => {
         success: false,
         error: {
           code: 'TEAMMATE_NOT_FOUND',
-          details: { message: 'Teammate not found' }
-        }
+          details: { message: 'Teammate not found' },
+        },
       });
       return;
     }
@@ -32,28 +32,28 @@ const getFeedback = async (req: AuthRequest, res: Response): Promise<void> => {
         {
           model: Question,
           as: 'questions',
-          attributes: ['id', 'questionText']
-        }
-      ]
+          attributes: ['id', 'questionText'],
+        },
+      ],
     });
 
     // Get user's most recent review for this teammate
     let answers: Answer[] = [];
     let reviewId: number | null = null;
-    
+
     if (userId) {
       const userReview = await Review.findOne({
         where: {
           teammateId: parseInt(teammateId),
-          capturingUserId: userId
+          capturingUserId: userId,
         },
         order: [['createdAt', 'DESC']], // Get most recent
         include: [
           {
             model: Answer,
-            as: 'answers'
-          }
-        ]
+            as: 'answers',
+          },
+        ],
       });
 
       if (userReview) {
@@ -63,24 +63,26 @@ const getFeedback = async (req: AuthRequest, res: Response): Promise<void> => {
     }
 
     // Build the response structure
-    const feedback = categories.map(category => ({
+    const feedback = categories.map((category) => ({
       category: {
         id: category.id,
-        name: category.name
+        name: category.name,
       },
       questions: (category as any).questions.map((question: any) => {
-        const existingAnswer = answers.find(a => a.questionId === question.id);
+        const existingAnswer = answers.find(
+          (a) => a.questionId === question.id,
+        );
         return {
           id: question.id,
           text: question.questionText,
           ...(existingAnswer && {
             answer: {
               value: existingAnswer.answer,
-              comment: existingAnswer.commentText
-            }
-          })
+              comment: existingAnswer.commentText,
+            },
+          }),
         };
-      })
+      }),
     }));
 
     res.status(200).json({
@@ -88,27 +90,30 @@ const getFeedback = async (req: AuthRequest, res: Response): Promise<void> => {
       data: {
         teammate: {
           id: teammate.id,
-          name: teammate.name
+          name: teammate.name,
         },
         ...(reviewId && { reviewId }), // Include reviewId if user has existing feedback
-        feedback
-      }
+        feedback,
+      },
     });
   } catch (error) {
     res.status(500).json({
       success: false,
       error: {
         code: 'GET_FEEDBACK_ERROR',
-        details: { message: (error as Error).message }
-      }
+        details: { message: (error as Error).message },
+      },
     });
   }
 };
 
 // POST /feedback/:teammateId
-const submitFeedback = async (req: AuthRequest, res: Response): Promise<void> => {
+const submitFeedback = async (
+  req: AuthRequest,
+  res: Response,
+): Promise<void> => {
   const transaction = await sequelize.transaction();
-  
+
   try {
     const { teammateId } = req.params;
     const { feedback } = req.body;
@@ -121,8 +126,8 @@ const submitFeedback = async (req: AuthRequest, res: Response): Promise<void> =>
         success: false,
         error: {
           code: 'TEAMMATE_NOT_FOUND',
-          details: { message: 'Teammate not found' }
-        }
+          details: { message: 'Teammate not found' },
+        },
       });
       return;
     }
@@ -131,25 +136,31 @@ const submitFeedback = async (req: AuthRequest, res: Response): Promise<void> =>
     const capturingUserId = req.user?.id || 'anonymous';
 
     // Create a new review
-    const review = await Review.create({
-      teammateId: parseInt(teammateId),
-      capturingUserId,
-      period: new Date().toISOString().slice(0, 7) // YYYY-MM format
-    }, { transaction });
+    const review = await Review.create(
+      {
+        teammateId: parseInt(teammateId),
+        capturingUserId,
+        period: new Date().toISOString().slice(0, 7), // YYYY-MM format
+      },
+      { transaction },
+    );
 
     // Create answers for each question
     const answerPromises: Promise<Answer>[] = [];
-    
+
     for (const categoryFeedback of feedback) {
       for (const questionFeedback of categoryFeedback.questions) {
         if (questionFeedback.answer) {
           answerPromises.push(
-            Answer.create({
-              reviewId: review.id,
-              questionId: questionFeedback.id,
-              answer: questionFeedback.answer.value,
-              commentText: questionFeedback.answer.comment
-            }, { transaction })
+            Answer.create(
+              {
+                reviewId: review.id,
+                questionId: questionFeedback.id,
+                answer: questionFeedback.answer.value,
+                commentText: questionFeedback.answer.comment,
+              },
+              { transaction },
+            ),
           );
         }
       }
@@ -161,32 +172,36 @@ const submitFeedback = async (req: AuthRequest, res: Response): Promise<void> =>
     res.status(201).json({
       success: true,
       data: {
-        reviewId: review.id
-      }
+        reviewId: review.id,
+      },
     });
   } catch (error) {
     await transaction.rollback();
-    
+
     // Differentiate between client errors and server errors
-    const isClientError = error instanceof Error && 
-      (error.message.includes('validation') || 
-       error.message.includes('Invalid') ||
-       error.message.includes('required'));
-    
+    const isClientError =
+      error instanceof Error &&
+      (error.message.includes('validation') ||
+        error.message.includes('Invalid') ||
+        error.message.includes('required'));
+
     res.status(isClientError ? 400 : 500).json({
       success: false,
       error: {
         code: isClientError ? 'VALIDATION_ERROR' : 'SUBMIT_FEEDBACK_ERROR',
-        details: { message: (error as Error).message }
-      }
+        details: { message: (error as Error).message },
+      },
     });
   }
 };
 
 // PUT /feedback/:teammateId/:reviewId - Update existing feedback
-const updateFeedback = async (req: AuthRequest, res: Response): Promise<void> => {
+const updateFeedback = async (
+  req: AuthRequest,
+  res: Response,
+): Promise<void> => {
   const transaction = await sequelize.transaction();
-  
+
   try {
     const { teammateId, reviewId } = req.params;
     const { feedback } = req.body;
@@ -197,9 +212,9 @@ const updateFeedback = async (req: AuthRequest, res: Response): Promise<void> =>
       where: {
         id: reviewId,
         teammateId: parseInt(teammateId),
-        capturingUserId: userId
+        capturingUserId: userId,
       },
-      transaction
+      transaction,
     });
 
     if (!review) {
@@ -208,8 +223,8 @@ const updateFeedback = async (req: AuthRequest, res: Response): Promise<void> =>
         success: false,
         error: {
           code: 'REVIEW_NOT_FOUND',
-          details: { message: 'Feedback not found or unauthorized' }
-        }
+          details: { message: 'Feedback not found or unauthorized' },
+        },
       });
       return;
     }
@@ -217,22 +232,25 @@ const updateFeedback = async (req: AuthRequest, res: Response): Promise<void> =>
     // Delete existing answers for this review
     await Answer.destroy({
       where: { reviewId: review.id },
-      transaction
+      transaction,
     });
 
     // Create new answers
     const answerPromises: Promise<Answer>[] = [];
-    
+
     for (const categoryFeedback of feedback) {
       for (const questionFeedback of categoryFeedback.questions) {
         if (questionFeedback.answer) {
           answerPromises.push(
-            Answer.create({
-              reviewId: review.id,
-              questionId: questionFeedback.id,
-              answer: questionFeedback.answer.value,
-              commentText: questionFeedback.answer.comment
-            }, { transaction })
+            Answer.create(
+              {
+                reviewId: review.id,
+                questionId: questionFeedback.id,
+                answer: questionFeedback.answer.value,
+                commentText: questionFeedback.answer.comment,
+              },
+              { transaction },
+            ),
           );
         }
       }
@@ -244,31 +262,35 @@ const updateFeedback = async (req: AuthRequest, res: Response): Promise<void> =>
     res.status(200).json({
       success: true,
       data: {
-        reviewId: review.id
-      }
+        reviewId: review.id,
+      },
     });
   } catch (error) {
     await transaction.rollback();
-    
-    const isClientError = error instanceof Error && 
-      (error.message.includes('validation') || 
-       error.message.includes('Invalid') ||
-       error.message.includes('required'));
-    
+
+    const isClientError =
+      error instanceof Error &&
+      (error.message.includes('validation') ||
+        error.message.includes('Invalid') ||
+        error.message.includes('required'));
+
     res.status(isClientError ? 400 : 500).json({
       success: false,
       error: {
         code: isClientError ? 'VALIDATION_ERROR' : 'UPDATE_FEEDBACK_ERROR',
-        details: { message: (error as Error).message }
-      }
+        details: { message: (error as Error).message },
+      },
     });
   }
 };
 
 // DELETE /feedback/:teammateId/:reviewId - Delete feedback
-const deleteFeedback = async (req: AuthRequest, res: Response): Promise<void> => {
+const deleteFeedback = async (
+  req: AuthRequest,
+  res: Response,
+): Promise<void> => {
   const transaction = await sequelize.transaction();
-  
+
   try {
     const { teammateId, reviewId } = req.params;
     const userId = req.user?.id;
@@ -278,9 +300,9 @@ const deleteFeedback = async (req: AuthRequest, res: Response): Promise<void> =>
       where: {
         id: reviewId,
         teammateId: parseInt(teammateId),
-        capturingUserId: userId
+        capturingUserId: userId,
       },
-      transaction
+      transaction,
     });
 
     if (!review) {
@@ -289,8 +311,8 @@ const deleteFeedback = async (req: AuthRequest, res: Response): Promise<void> =>
         success: false,
         error: {
           code: 'REVIEW_NOT_FOUND',
-          details: { message: 'Feedback not found or unauthorized' }
-        }
+          details: { message: 'Feedback not found or unauthorized' },
+        },
       });
       return;
     }
@@ -298,7 +320,7 @@ const deleteFeedback = async (req: AuthRequest, res: Response): Promise<void> =>
     // Delete answers first (due to foreign key)
     await Answer.destroy({
       where: { reviewId: review.id },
-      transaction
+      transaction,
     });
 
     // Delete the review
@@ -307,17 +329,17 @@ const deleteFeedback = async (req: AuthRequest, res: Response): Promise<void> =>
 
     res.status(200).json({
       success: true,
-      message: 'Feedback deleted successfully'
+      message: 'Feedback deleted successfully',
     });
   } catch (error) {
     await transaction.rollback();
-    
+
     res.status(500).json({
       success: false,
       error: {
         code: 'DELETE_FEEDBACK_ERROR',
-        details: { message: (error as Error).message }
-      }
+        details: { message: (error as Error).message },
+      },
     });
   }
 };
@@ -326,5 +348,5 @@ export default {
   getFeedback,
   submitFeedback,
   updateFeedback,
-  deleteFeedback
+  deleteFeedback,
 };

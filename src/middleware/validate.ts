@@ -14,20 +14,20 @@ export const validateBody = (schema: ZodSchema) => {
             code: 'VALIDATION_ERROR',
             details: {
               message: 'Invalid request data',
-              errors: error.issues.map(err => ({
+              errors: error.issues.map((err) => ({
                 field: err.path.join('.'),
-                message: err.message
-              }))
-            }
-          }
+                message: err.message,
+              })),
+            },
+          },
         });
       } else {
         res.status(500).json({
           success: false,
           error: {
             code: 'VALIDATION_ERROR',
-            details: { message: 'Validation failed' }
-          }
+            details: { message: 'Validation failed' },
+          },
         });
       }
     }
@@ -41,10 +41,10 @@ export const validateQuery = (schema: ZodSchema) => {
       const query = Object.fromEntries(
         Object.entries(req.query).map(([key, value]) => [
           key,
-          value === undefined ? undefined : String(value)
-        ])
+          value === undefined ? undefined : String(value),
+        ]),
       );
-      
+
       req.query = schema.parse(query) as any;
       next();
     } catch (error) {
@@ -55,20 +55,20 @@ export const validateQuery = (schema: ZodSchema) => {
             code: 'VALIDATION_ERROR',
             details: {
               message: 'Invalid query parameters',
-              errors: error.issues.map(err => ({
+              errors: error.issues.map((err) => ({
                 field: err.path.join('.'),
-                message: err.message
-              }))
-            }
-          }
+                message: err.message,
+              })),
+            },
+          },
         });
       } else {
         res.status(500).json({
           success: false,
           error: {
             code: 'VALIDATION_ERROR',
-            details: { message: 'Validation failed' }
-          }
+            details: { message: 'Validation failed' },
+          },
         });
       }
     }

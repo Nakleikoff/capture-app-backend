@@ -12,9 +12,12 @@ interface AnswerAttributes {
   updatedAt?: Date;
 }
 
-interface AnswerCreationAttributes extends Optional<AnswerAttributes, 'id'> {}
+type AnswerCreationAttributes = Optional<AnswerAttributes, 'id'>;
 
-class Answer extends Model<AnswerAttributes, AnswerCreationAttributes> implements AnswerAttributes {
+class Answer
+  extends Model<AnswerAttributes, AnswerCreationAttributes>
+  implements AnswerAttributes
+{
   declare id: number;
   declare answer: number;
   declare commentText: string;
@@ -29,7 +32,7 @@ Answer.init(
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      autoIncrement: true
+      autoIncrement: true,
     },
     answer: {
       type: DataTypes.INTEGER,
@@ -47,39 +50,42 @@ Answer.init(
           } else {
             throw new Error('Invalid answer value. Must be 1, -1, or 0');
           }
-        } else if (typeof value === 'string' && answers[value as keyof typeof answers]) {
+        } else if (
+          typeof value === 'string' &&
+          answers[value as keyof typeof answers]
+        ) {
           this.setDataValue('answer', answers[value as keyof typeof answers]);
         } else {
           throw new Error('Invalid answer value');
         }
-      }
+      },
     },
     commentText: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
     reviewId: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
         model: 'reviews',
-        key: 'id'
-      }
+        key: 'id',
+      },
     },
     questionId: {
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
         model: 'questions',
-        key: 'id'
-      }
-    }
+        key: 'id',
+      },
+    },
   },
   {
     sequelize,
     tableName: 'answers',
-    timestamps: true
-  }
+    timestamps: true,
+  },
 );
 
 export default Answer;

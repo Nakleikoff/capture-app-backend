@@ -8,15 +8,15 @@ describe('Validation Middleware', () => {
     it('should pass validation with valid data', () => {
       const schema = z.object({
         name: z.string().min(1),
-        age: z.number().positive()
+        age: z.number().positive(),
       });
 
       const req = {
-        body: { name: 'John', age: 25 }
+        body: { name: 'John', age: 25 },
       } as Request;
       const res = {
         status: vi.fn().mockReturnThis(),
-        json: vi.fn()
+        json: vi.fn(),
       } as unknown as Response;
       const next = vi.fn() as NextFunction;
 
@@ -30,15 +30,15 @@ describe('Validation Middleware', () => {
     it('should reject validation with invalid data', () => {
       const schema = z.object({
         name: z.string().min(1),
-        age: z.number().positive()
+        age: z.number().positive(),
       });
 
       const req = {
-        body: { name: '', age: -5 }
+        body: { name: '', age: -5 },
       } as Request;
       const res = {
         status: vi.fn().mockReturnThis(),
-        json: vi.fn()
+        json: vi.fn(),
       } as unknown as Response;
       const next = vi.fn() as NextFunction;
 
@@ -51,24 +51,24 @@ describe('Validation Middleware', () => {
         expect.objectContaining({
           success: false,
           error: expect.objectContaining({
-            code: 'VALIDATION_ERROR'
-          })
-        })
+            code: 'VALIDATION_ERROR',
+          }),
+        }),
       );
     });
 
     it('should return detailed validation errors', () => {
       const schema = z.object({
         email: z.string().email(),
-        count: z.number().int()
+        count: z.number().int(),
       });
 
       const req = {
-        body: { email: 'invalid-email', count: 3.14 }
+        body: { email: 'invalid-email', count: 3.14 },
       } as Request;
       const res = {
         status: vi.fn().mockReturnThis(),
-        json: vi.fn()
+        json: vi.fn(),
       } as unknown as Response;
       const next = vi.fn() as NextFunction;
 
@@ -82,12 +82,12 @@ describe('Validation Middleware', () => {
               errors: expect.arrayContaining([
                 expect.objectContaining({
                   field: expect.any(String),
-                  message: expect.any(String)
-                })
-              ])
-            })
-          })
-        })
+                  message: expect.any(String),
+                }),
+              ]),
+            }),
+          }),
+        }),
       );
     });
   });
@@ -96,15 +96,15 @@ describe('Validation Middleware', () => {
     it('should pass validation with valid query params', () => {
       const schema = z.object({
         page: z.string().regex(/^\d+$/).transform(Number),
-        limit: z.string().regex(/^\d+$/).transform(Number)
+        limit: z.string().regex(/^\d+$/).transform(Number),
       });
 
       const req = {
-        query: { page: '1', limit: '10' }
+        query: { page: '1', limit: '10' },
       } as unknown as Request;
       const res = {
         status: vi.fn().mockReturnThis(),
-        json: vi.fn()
+        json: vi.fn(),
       } as unknown as Response;
       const next = vi.fn() as NextFunction;
 
@@ -117,15 +117,15 @@ describe('Validation Middleware', () => {
 
     it('should reject validation with invalid query params', () => {
       const schema = z.object({
-        page: z.string().regex(/^\d+$/)
+        page: z.string().regex(/^\d+$/),
       });
 
       const req = {
-        query: { page: 'invalid' }
+        query: { page: 'invalid' },
       } as unknown as Request;
       const res = {
         status: vi.fn().mockReturnThis(),
-        json: vi.fn()
+        json: vi.fn(),
       } as unknown as Response;
       const next = vi.fn() as NextFunction;
 
